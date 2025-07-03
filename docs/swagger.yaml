@@ -1,0 +1,191 @@
+definitions:
+  handlers.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handlers.LoginResponse:
+    properties:
+      role:
+        type: string
+      token:
+        type: string
+    type: object
+  models.Patient:
+    properties:
+      age:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      notes:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.LoginResponse'
+      security:
+      - BearerAuth: []
+      summary: Login
+      tags:
+      - Auth
+  /patients:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Patient'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List Patients
+      tags:
+      - Receptionist
+      - Doctor
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Patient data
+        in: body
+        name: patient
+        required: true
+        schema:
+          $ref: '#/definitions/models.Patient'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Patient'
+      security:
+      - BearerAuth: []
+      summary: Create Patient
+      tags:
+      - Receptionist
+  /patients/{id}:
+    delete:
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete Patient
+      tags:
+      - Receptionist
+    get:
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Patient'
+      security:
+      - BearerAuth: []
+      summary: Get Patient
+      tags:
+      - Receptionist
+      - Doctor
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Patient data
+        in: body
+        name: patient
+        required: true
+        schema:
+          $ref: '#/definitions/models.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Patient'
+      security:
+      - BearerAuth: []
+      summary: Update Patient
+      tags:
+      - Receptionist
+  /patients/{id}/notes:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Notes
+        in: body
+        name: notes
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Patient'
+      security:
+      - BearerAuth: []
+      summary: Update Patient Notes
+      tags:
+      - Doctor
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
