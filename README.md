@@ -55,5 +55,11 @@ A simple Golang web application for clinic management with Receptionist and Doct
 
 ---
 
+## Documentation Link
+
+clinic-app-doc.vercel.app
+
+---
+
 ## License
 MIT 
